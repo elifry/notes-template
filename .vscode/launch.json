@@ -23,6 +23,27 @@
       "cwd": "${workspaceFolder}/journal-automation"
     },
     {
+      "name": "Start Physics Class",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- add-custom-header \"Physics Class - Prof. Paulson (1:30pm)\" }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Start CS Class",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- add-custom-header \"CS 101 - Algorithms & Data Structures (10:00am)\" }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Start Math Class",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- add-custom-header \"Calculus III - Prof. Smith (2:15pm)\" }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
       "name": "Find Empty Journal Entry",
       "type": "PowerShell",
       "request": "launch",

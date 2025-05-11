@@ -1032,3 +1032,31 @@ pub fn analyze_length() -> Result<()> {
 
     Ok(())
 }
+
+pub fn add_custom_header(header: &str) -> Result<()> {
+    let journal_path = get_todays_journal_path()?;
+    let path = std::path::Path::new(&journal_path);
+
+    // Check if file is empty
+    let is_empty = path.metadata()?.len() == 0;
+
+    // If file is empty, create standard header first
+    if is_empty {
+        create_journal_entry(&journal_path)?;
+    }
+
+    // Open file for appending
+    let mut file = OpenOptions::new()
+        .append(true)
+        .open(path)
+        .context("Failed to open journal file")?;
+
+    // Add a newline before the custom header
+    writeln!(file)?;
+
+    // Add the custom header
+    writeln!(file, "## {}", header)?;
+
+    // Open the file in the editor
+    open_in_editor(&journal_path)
+}

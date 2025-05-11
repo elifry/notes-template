@@ -31,6 +31,11 @@ pub enum Commands {
         #[arg(value_parser = validate_year)]
         year: Option<u32>,
     },
+    /// Add a custom header to today's journal entry
+    AddCustomHeader {
+        /// The header text to add
+        header: String,
+    },
     /// Analyze journal completion rates
     AnalyzeCompletion,
     /// Analyze journal length statistics

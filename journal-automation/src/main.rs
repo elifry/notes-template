@@ -27,6 +27,9 @@ fn main() -> Result<()> {
         Commands::EmptyDay { year } => {
             journal::find_empty_day(year)?;
         }
+        Commands::AddCustomHeader { header } => {
+            journal::add_custom_header(&header)?;
+        }
         Commands::AnalyzeCompletion => {
             journal::analyze_completion()?;
         }

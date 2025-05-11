@@ -24,6 +24,9 @@ ja create-year 2025
 # Find and open a random empty journal entry (optionally filtered by year)
 ja empty-day [year]
 
+# Add a custom header to today's journal entry
+ja add-custom-header "Header Text"
+
 # Analyze journal completion rates by year (with completion markers and days remaining)
 ja analyze-completion
 
@@ -47,6 +50,7 @@ ja validate-contents
 - Open specific journal: opens entry for given date (now implemented as `ja open-day`)
 - Create entire year structure: creates all folders and files for a given year (now implemented as `ja create-year`)
 - Find empty journal entries: finds and opens a random empty journal entry with proper date header, optionally filtered by year (now implemented as `ja empty-day`)
+- Add custom headers: adds a custom H2 header to today's journal entry (now implemented as `ja add-custom-header`)
 - Analyze completion rates: shows completion statistics for each year with visual indicators (now implemented as `ja analyze-completion`)
 - Analyze journal length: shows average word and line counts per year (now implemented as `ja analyze-length`)
 - Analyze Amazon data: shows potential journal additions from Amazon data (now implemented as `ja analyze-amazon-data`)
@@ -84,3 +88,30 @@ The project is structured as a Rust CLI tool with the following components:
 - `src/journal.rs`: Core journal functionality
 - `src/utils.rs`: Utility functions (device info, location, weather, editor)
 - `src/amazon.rs`: Amazon data processing and integration
+
+## Editor Requirements
+
+The tool is designed to work with either Cursor or VS Code as the default editor. To ensure proper functionality:
+
+1. Install either Cursor (preferred) or VS Code
+2. Add the editor to your system PATH:
+   - For Windows:
+     - Add to both Command Prompt (cmd) and PowerShell PATH
+     - Restart your terminal after installation
+   - For macOS/Linux:
+     - The installer should handle this automatically
+     - If needed, add to your shell's PATH manually
+
+### Troubleshooting Editor Issues
+
+If you encounter issues with the editor not being found:
+
+1. Verify the editor is in your PATH:
+   - Windows: Run `where cursor` or `where code` in Command Prompt
+   - macOS/Linux: Run `which cursor` or `which code` in terminal
+2. Try restarting your terminal/IDE
+3. If using PowerShell on Windows, ensure the editor is in PowerShell's PATH specifically
+4. The tool will automatically try multiple methods to launch the editor, including:
+   - Direct command
+   - Command Prompt (Windows)
+   - PowerShell (Windows)

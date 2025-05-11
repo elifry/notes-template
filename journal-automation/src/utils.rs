@@ -63,17 +63,61 @@ pub fn get_weather(location: &str) -> Result<String> {
 }
 
 pub fn open_in_editor(file_path: &str) -> Result<()> {
-    // Try to open with Cursor first, then VS Code
-    let cursor_result = Command::new("cursor").arg(file_path).spawn();
+    // Try different methods to open Cursor
+    let cursor_commands = [
+        ("cursor", vec![file_path]),
+        ("cmd", vec!["/c", "cursor", file_path]),
+        ("powershell", vec!["-Command", "cursor", file_path]),
+    ];
 
-    if cursor_result.is_err() {
-        Command::new("code")
-            .arg(file_path)
-            .spawn()
-            .context("Failed to open file in VS Code")?;
+    // Track which methods failed
+    let mut failed_methods = Vec::new();
+    for (cmd, args) in cursor_commands.iter() {
+        let result = Command::new(cmd).args(args).spawn();
+        if result.is_ok() {
+            return Ok(());
+        }
+        failed_methods.push((cmd, args.clone()));
     }
 
-    Ok(())
+    // If we're on Windows and cmd works but powershell doesn't, try to help fix the PATH
+    #[cfg(target_os = "windows")]
+    {
+        if failed_methods.iter().any(|(cmd, _)| *cmd == "powershell") {
+            // Check if cursor is in cmd PATH
+            if let Ok(output) = Command::new("cmd").args(["/c", "where", "cursor"]).output() {
+                if let Ok(path) = String::from_utf8(output.stdout) {
+                    if !path.trim().is_empty() {
+                        // Found cursor in cmd PATH, suggest adding to PowerShell
+                        let cursor_path = path.lines().next().unwrap_or("").trim();
+                        if !cursor_path.is_empty() {
+                            println!("\n[INFO] Cursor found in Command Prompt PATH but not in PowerShell PATH.");
+                            println!("To fix this, run the following command in PowerShell as Administrator:");
+                            println!("$env:Path += \";{}\"", cursor_path);
+                            println!("To make this permanent, add the above line to your PowerShell profile.");
+                            println!("You can open your profile with: notepad $PROFILE\n");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Fallback to VS Code
+    let code_commands = [
+        ("code", vec![file_path]),
+        ("cmd", vec!["/c", "code", file_path]),
+        ("powershell", vec!["-Command", "code", file_path]),
+    ];
+
+    for (cmd, args) in code_commands.iter() {
+        let result = Command::new(cmd).args(args).spawn();
+        if result.is_ok() {
+            return Ok(());
+        }
+    }
+
+    anyhow::bail!("Failed to open file in any editor. Please ensure Cursor or VS Code is installed and in your PATH.")
 }
 
 pub fn validate_year(s: &str) -> Result<u32, String> {
