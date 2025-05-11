@@ -11,13 +11,24 @@ pub struct Cli {
 #[derive(Debug, Subcommand)]
 pub enum Commands {
     /// Start today's journal entry
-    StartJournal,
+    StartJournal {
+        /// Class name (e.g., CS101)
+        #[arg(long, default_value = "journal")]
+        class: String,
+    },
     /// Open today's journal entry
-    OpenJournal,
+    OpenJournal {
+        /// Class name (e.g., CS101)
+        #[arg(long, default_value = "journal")]
+        class: String,
+    },
     /// Open a specific journal entry by date (YYYY-MM-DD)
     OpenDay {
         /// Date in YYYY-MM-DD format
         date: String,
+        /// Class name (e.g., CS101)
+        #[arg(long, default_value = "journal")]
+        class: String,
     },
     /// Create journal structure for an entire year
     CreateYear {
@@ -47,6 +58,4 @@ pub enum Commands {
     ValidateStructure,
     /// Validate journal contents
     ValidateContents,
-    /// Analyze all Amazon data (purchases, digital content, etc.) and add it to journals
-    AnalyzeAmazonData,
 }

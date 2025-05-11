@@ -2,6 +2,7 @@ use anyhow::{Context, Result};
 use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use std::fmt;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClassSchedule {
@@ -30,6 +31,20 @@ pub enum Weekday {
     Friday,
     Saturday,
     Sunday,
+}
+
+impl fmt::Display for Weekday {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Weekday::Monday => write!(f, "Monday"),
+            Weekday::Tuesday => write!(f, "Tuesday"),
+            Weekday::Wednesday => write!(f, "Wednesday"),
+            Weekday::Thursday => write!(f, "Thursday"),
+            Weekday::Friday => write!(f, "Friday"),
+            Weekday::Saturday => write!(f, "Saturday"),
+            Weekday::Sunday => write!(f, "Sunday"),
+        }
+    }
 }
 
 impl ClassSchedule {

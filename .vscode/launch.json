@@ -23,24 +23,45 @@
       "cwd": "${workspaceFolder}/journal-automation"
     },
     {
-      "name": "Start Physics Class",
+      "name": "Start PHYS211 Notes",
       "type": "PowerShell",
       "request": "launch",
-      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- add-custom-header \"Physics Class - Prof. Paulson (1:30pm)\" }",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- start-journal --class PHYS211 }",
       "cwd": "${workspaceFolder}/journal-automation"
     },
     {
-      "name": "Start CS Class",
+      "name": "Open Today's PHYS211 Notes",
       "type": "PowerShell",
       "request": "launch",
-      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- add-custom-header \"CS 101 - Algorithms & Data Structures (10:00am)\" }",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- open-journal --class PHYS211 }",
       "cwd": "${workspaceFolder}/journal-automation"
     },
     {
-      "name": "Start Math Class",
+      "name": "Start CS201 Notes",
       "type": "PowerShell",
       "request": "launch",
-      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- add-custom-header \"Calculus III - Prof. Smith (2:15pm)\" }",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- start-journal --class CS201 }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Open Today's CS201 Notes",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- open-journal --class CS201 }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Start MATH231 Notes",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- start-journal --class MATH231 }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Open Today's MATH231 Notes",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- open-journal --class MATH231 }",
       "cwd": "${workspaceFolder}/journal-automation"
     },
     {

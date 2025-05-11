@@ -10,7 +10,7 @@ use std::{
     path::PathBuf,
 };
 
-pub fn get_todays_journal_path() -> Result<String> {
+pub fn get_todays_journal_path(class: &str) -> Result<String> {
     let today = Local::now();
     let year = today.format("%Y").to_string();
     let month = today.format("%m").to_string();
@@ -20,8 +20,9 @@ pub fn get_todays_journal_path() -> Result<String> {
 
     let git_root = get_git_root()?;
     Ok(format!(
-        "{}/journal/{}/{}-{}/{}_{}.md",
+        "{}/{}/{}/{}-{}/{}_{}.md",
         git_root,
+        class,
         year,
         month,
         month_name.to_lowercase(),
@@ -30,7 +31,7 @@ pub fn get_todays_journal_path() -> Result<String> {
     ))
 }
 
-pub fn create_journal_entry(journal_path: &str) -> Result<()> {
+pub fn create_journal_entry(journal_path: &str, class: &str) -> Result<()> {
     if !std::path::Path::new(journal_path).exists() {
         anyhow::bail!("Journal file not found: {}", journal_path);
     }
@@ -47,20 +48,51 @@ pub fn create_journal_entry(journal_path: &str) -> Result<()> {
 
     writeln!(file, "# {}", date_text)?;
     writeln!(file)?; // Add an extra newline
-    writeln!(file, "| device  | location     | weather    |")?;
-    writeln!(file, "| ------- | ------------ | ---------- |")?;
 
-    let device = get_device_info();
-    let location = get_location()?;
-    let weather = get_weather(&location)?;
+    // Only add device/location/weather for journal entries
+    if class == "journal" {
+        writeln!(file, "| device  | location     | weather    |")?;
+        writeln!(file, "| ------- | ------------ | ---------- |")?;
 
-    writeln!(file, "| {} | {} | {} |", device, location, weather)?;
+        let device = get_device_info();
+        let location = get_location()?;
+        let weather = get_weather(&location)?;
+
+        writeln!(file, "| {} | {} | {} |", device, location, weather)?;
+    } else {
+        // For class notes, add class-specific header
+        writeln!(file, "## Class Information")?;
+        writeln!(file)?;
+        writeln!(file, "- Course: {}", class)?;
+
+        // Try to load schedule for additional info
+        if let Ok(schedule) = ClassSchedule::from_file(&format!(
+            "{}/journal-automation/schedules/{}.json",
+            get_git_root()?,
+            class
+        )) {
+            if let Some(day) = schedule.schedule.iter().find(|d| {
+                d.weekday.to_string().to_lowercase()
+                    == today.format("%A").to_string().to_lowercase()
+            }) {
+                if let Some(location) = &day.location {
+                    writeln!(file, "- Location: {}", location)?;
+                }
+                if let Some(instructor) = &day.instructor {
+                    writeln!(file, "- Instructor: {}", instructor)?;
+                }
+                writeln!(file, "- Time: {} - {}", day.start_time, day.end_time)?;
+            }
+        }
+        writeln!(file)?;
+        writeln!(file, "## Notes")?;
+    }
 
     open_in_editor(journal_path)
 }
 
-pub fn open_journal_entry() -> Result<()> {
-    let journal_path = get_todays_journal_path()?;
+pub fn open_journal_entry(class: &str) -> Result<()> {
+    let journal_path = get_todays_journal_path(class)?;
 
     if !std::path::Path::new(&journal_path).exists() {
         anyhow::bail!("Journal file not found: {}", journal_path);
@@ -69,7 +101,7 @@ pub fn open_journal_entry() -> Result<()> {
     open_in_editor(&journal_path)
 }
 
-pub fn open_journal_entry_by_date(date_str: &str) -> Result<()> {
+pub fn open_journal_entry_by_date(date_str: &str, class: &str) -> Result<()> {
     // Parse the date string (YYYY-MM-DD)
     let date = NaiveDate::parse_from_str(date_str, "%Y-%m-%d")
         .with_context(|| format!("Invalid date format: {}. Expected YYYY-MM-DD", date_str))?;
@@ -82,8 +114,8 @@ pub fn open_journal_entry_by_date(date_str: &str) -> Result<()> {
 
     let git_root = get_git_root()?;
     let journal_path = format!(
-        "{}/journal/{}/{}-{}/{}_{}.md",
-        git_root, year, month, month_name, day, weekday
+        "{}/{}/{}/{}-{}/{}_{}.md",
+        git_root, class, year, month, month_name, day, weekday
     );
 
     if !std::path::Path::new(&journal_path).exists() {
@@ -1072,7 +1104,7 @@ pub fn analyze_length() -> Result<()> {
 }
 
 pub fn add_custom_header(header: &str) -> Result<()> {
-    let journal_path = get_todays_journal_path()?;
+    let journal_path = get_todays_journal_path("journal")?;
     let path = std::path::Path::new(&journal_path);
 
     // Check if file is empty
@@ -1080,7 +1112,7 @@ pub fn add_custom_header(header: &str) -> Result<()> {
 
     // If file is empty, create standard header first
     if is_empty {
-        create_journal_entry(&journal_path)?;
+        create_journal_entry(&journal_path, "journal")?;
     }
 
     // Open file for appending

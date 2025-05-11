@@ -129,7 +129,7 @@ pub fn validate_year(s: &str) -> Result<u32, String> {
     }
 }
 
-pub fn get_journal_path_for_date(date: chrono::NaiveDate) -> Result<String> {
+pub fn get_journal_path_for_date(date: chrono::NaiveDate, class: &str) -> Result<String> {
     let year = date.format("%Y").to_string();
     let month = date.format("%m").to_string();
     let month_name = date.format("%b").to_string().to_lowercase();
@@ -138,8 +138,8 @@ pub fn get_journal_path_for_date(date: chrono::NaiveDate) -> Result<String> {
 
     let git_root = get_git_root()?;
     Ok(format!(
-        "{}/journal/{}/{}-{}/{}_{}.md",
-        git_root, year, month, month_name, day, weekday
+        "{}/{}/{}/{}-{}/{}_{}.md",
+        git_root, class, year, month, month_name, day, weekday
     ))
 }
 

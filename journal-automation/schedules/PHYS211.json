@@ -1,0 +1,21 @@
+{
+  "class_name": "PHYS211",
+  "start_date": "2024-01-16",
+  "end_date": "2024-05-14",
+  "schedule": [
+    {
+      "weekday": "tuesday",
+      "start_time": "13:30",
+      "end_time": "14:45",
+      "location": "Science Building 205",
+      "instructor": "Prof. Paulson"
+    },
+    {
+      "weekday": "thursday",
+      "start_time": "13:30",
+      "end_time": "14:45",
+      "location": "Science Building 205",
+      "instructor": "Prof. Paulson"
+    }
+  ]
+}

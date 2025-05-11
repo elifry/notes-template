@@ -33,9 +33,6 @@ ja analyze-completion
 # Analyze average word and line counts by year
 ja analyze-length
 
-# Analyze Amazon data add it to journals
-ja analyze-amazon-data
-
 # Validate journal structure against expected dates
 ja validate-structure
 
@@ -53,7 +50,6 @@ ja validate-contents
 - Add custom headers: adds a custom H2 header to today's journal entry (now implemented as `ja add-custom-header`)
 - Analyze completion rates: shows completion statistics for each year with visual indicators (now implemented as `ja analyze-completion`)
 - Analyze journal length: shows average word and line counts per year (now implemented as `ja analyze-length`)
-- Analyze Amazon data: shows potential journal additions from Amazon data (now implemented as `ja analyze-amazon-data`)
 - Validate structure: checks for date mismatches and duplicates (now implemented as `ja validate-structure`)
 - Validate contents: checks that journal headers match their file dates (now implemented as `ja validate-contents`)
 
@@ -87,7 +83,6 @@ The project is structured as a Rust CLI tool with the following components:
 - `src/cli.rs`: Command-line interface definitions
 - `src/journal.rs`: Core journal functionality
 - `src/utils.rs`: Utility functions (device info, location, weather, editor)
-- `src/amazon.rs`: Amazon data processing and integration
 
 ## Editor Requirements
 

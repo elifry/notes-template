@@ -1,4 +1,3 @@
-mod amazon;
 mod cli;
 mod journal;
 mod schedule;
@@ -12,15 +11,15 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::StartJournal => {
-            let journal_path = journal::get_todays_journal_path()?;
-            journal::create_journal_entry(&journal_path)?;
+        Commands::StartJournal { class } => {
+            let journal_path = journal::get_todays_journal_path(&class)?;
+            journal::create_journal_entry(&journal_path, &class)?;
         }
-        Commands::OpenJournal => {
-            journal::open_journal_entry()?;
+        Commands::OpenJournal { class } => {
+            journal::open_journal_entry(&class)?;
         }
-        Commands::OpenDay { date } => {
-            journal::open_journal_entry_by_date(&date)?;
+        Commands::OpenDay { date, class } => {
+            journal::open_journal_entry_by_date(&date, &class)?;
         }
         Commands::CreateYear { year, class } => {
             journal::create_year(year, &class)?;
@@ -36,10 +35,6 @@ fn main() -> Result<()> {
         }
         Commands::AnalyzeLength => {
             journal::analyze_length()?;
-        }
-        Commands::AnalyzeAmazonData => {
-            let base_path = std::path::Path::new("../amazon-data");
-            amazon::analyze_amazon_data(base_path.to_str().unwrap(), false)?;
         }
         Commands::ValidateStructure => {
             journal::validate_structure()?;
