@@ -107,9 +107,11 @@ pub fn create_year(year: u32, class: &str) -> Result<()> {
             HashSet::new() // Empty set means create all days
         };
 
-    // Create year folder and journey file
+    // Create year folder and journey file (only for journal)
     fs::create_dir_all(&year_folder)?;
-    File::create(format!("{}/{}_journey.md", year_folder, year))?;
+    if class == "journal" {
+        File::create(format!("{}/{}_journey.md", year_folder, year))?;
+    }
 
     // Create each month
     for month in 1..=12 {
@@ -120,17 +122,8 @@ pub fn create_year(year: u32, class: &str) -> Result<()> {
         let month_name_short = date.format("%b").to_string().to_lowercase();
         let month_folder = format!("{}/{:02}-{}", year_folder, month, month_name_short);
 
-        // Create month folder
-        fs::create_dir_all(&month_folder)?;
-
-        // Create monthly files
-        File::create(format!(
-            "{}/{} {} Happenings.md",
-            month_folder, month_name, year
-        ))?;
-        File::create(format!("{}/{} goals.md", month_folder, month_name))?;
-
-        // Create daily files
+        // Check if there are any days in this month that need files
+        let mut has_files = false;
         let days_in_month = date
             .with_day(1)
             .and_then(|d| d.with_month(month + 1))
@@ -139,15 +132,45 @@ pub fn create_year(year: u32, class: &str) -> Result<()> {
             .map(|d| d.day())
             .unwrap_or(31);
 
-        for day in 1..=days_in_month {
-            let date = NaiveDate::from_ymd_opt(year as i32, month, day)
-                .ok_or_else(|| anyhow::anyhow!("Invalid date"))?;
+        // For journal, create all days. For classes, check schedule
+        if class == "journal" {
+            has_files = true;
+        } else {
+            for day in 1..=days_in_month {
+                if let Some(date) = NaiveDate::from_ymd_opt(year as i32, month, day) {
+                    if class_dates.contains(&date) {
+                        has_files = true;
+                        break;
+                    }
+                }
+            }
+        }
 
-            // Only create file if no schedule exists or if this is a class day
-            if class_dates.is_empty() || class_dates.contains(&date) {
-                let weekday = date.format("%A").to_string();
-                let day_file = format!("{}/{:02}_{}.md", month_folder, day, weekday);
-                File::create(day_file)?;
+        // Only create month structure if there are files to create
+        if has_files {
+            // Create month folder
+            fs::create_dir_all(&month_folder)?;
+
+            // Create monthly files only for journal
+            if class == "journal" {
+                File::create(format!(
+                    "{}/{} {} Happenings.md",
+                    month_folder, month_name, year
+                ))?;
+                File::create(format!("{}/{} goals.md", month_folder, month_name))?;
+            }
+
+            // Create daily files
+            for day in 1..=days_in_month {
+                let date = NaiveDate::from_ymd_opt(year as i32, month, day)
+                    .ok_or_else(|| anyhow::anyhow!("Invalid date"))?;
+
+                // Only create file if no schedule exists or if this is a class day
+                if class_dates.is_empty() || class_dates.contains(&date) {
+                    let weekday = date.format("%A").to_string();
+                    let day_file = format!("{}/{:02}_{}.md", month_folder, day, weekday);
+                    File::create(day_file)?;
+                }
             }
         }
     }
