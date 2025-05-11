@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "rust-lang.rust-analyzer",
     "bierner.github-markdown-preview",
     "davidanson.vscode-markdownlint",
     "esbenp.prettier-vscode",
