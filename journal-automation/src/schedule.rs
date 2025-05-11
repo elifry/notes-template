@@ -151,9 +151,10 @@ mod tests {
         let schedule: ClassSchedule = serde_json::from_str(json).unwrap();
         let dates = schedule.get_class_dates().unwrap();
 
-        // Should have 2 dates: Jan 15 (Monday) and Jan 17 (Wednesday)
-        assert_eq!(dates.len(), 2);
+        // Should have 3 dates: Jan 15 (Monday), Jan 17 (Wednesday), and Jan 22 (Monday)
+        assert_eq!(dates.len(), 3);
         assert_eq!(dates[0], NaiveDate::from_ymd_opt(2024, 1, 15).unwrap());
         assert_eq!(dates[1], NaiveDate::from_ymd_opt(2024, 1, 17).unwrap());
+        assert_eq!(dates[2], NaiveDate::from_ymd_opt(2024, 1, 22).unwrap());
     }
 }
