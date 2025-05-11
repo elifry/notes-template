@@ -1,0 +1,68 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Start Today's Journal Entry",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- start-journal }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Open Today's Journal Entry",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- open-journal }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Open Journal Entry by Date",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { $date = Read-Host 'Enter date (YYYY-MM-DD)'; cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- open-day $date }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Find Empty Journal Entry",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- empty-day }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Analyze Journal Completion",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- analyze-completion }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Analyze Journal Length",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- analyze-length }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Validate Journal Structure",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- validate-structure }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Validate Journal Contents",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- validate-contents }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    },
+    {
+      "name": "Create Year",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "& { $year = Read-Host 'Enter year (YYYY)'; cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- create-year $year }",
+      "cwd": "${workspaceFolder}/journal-automation"
+    }
+  ]
+}

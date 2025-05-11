@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "bierner.github-markdown-preview",
+    "davidanson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "fill-labs.dependi",
+    "github.github-vscode-theme",
+    "github.vscode-github-actions",
+    "mechatroner.rainbow-csv",
+    "ms-vscode.powershell",
+    "perkovec.emoji",
+    "redhat.vscode-yaml",
+    "royaction.color-manager",
+    "samadamday.markdown-clever-lists",
+    "sidestreetsoftware.code-spell-checker",
+    "svelte.svelte-vscode",
+    "vscode-icons-team.vscode-icons",
+    "vue.volar"
+  ]
+}
