@@ -1,6 +1,7 @@
 mod amazon;
 mod cli;
 mod journal;
+mod schedule;
 mod utils;
 
 use anyhow::Result;

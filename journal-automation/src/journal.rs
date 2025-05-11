@@ -1,9 +1,10 @@
+use crate::schedule::ClassSchedule;
 use crate::utils::{get_device_info, get_git_root, get_location, get_weather, open_in_editor};
 use anyhow::{Context, Result};
 use chrono::{Datelike, Local, NaiveDate};
 use rand::seq::SliceRandom;
 use std::{
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     fs::{self, File, OpenOptions},
     io::Write,
     path::PathBuf,
@@ -96,6 +97,16 @@ pub fn create_year(year: u32, class: &str) -> Result<()> {
     let git_root = get_git_root()?;
     let year_folder = format!("{}/{}/{}", git_root, class, year);
 
+    // Try to load schedule file to get class dates
+    let schedule_path = format!("{}/journal-automation/schedules/{}.json", git_root, class);
+    let class_dates: HashSet<NaiveDate> =
+        if let Ok(schedule) = ClassSchedule::from_file(&schedule_path) {
+            schedule.get_class_dates()?.into_iter().collect()
+        } else {
+            // If no schedule file exists, include all dates
+            HashSet::new() // Empty set means create all days
+        };
+
     // Create year folder and journey file
     fs::create_dir_all(&year_folder)?;
     File::create(format!("{}/{}_journey.md", year_folder, year))?;
@@ -131,9 +142,13 @@ pub fn create_year(year: u32, class: &str) -> Result<()> {
         for day in 1..=days_in_month {
             let date = NaiveDate::from_ymd_opt(year as i32, month, day)
                 .ok_or_else(|| anyhow::anyhow!("Invalid date"))?;
-            let weekday = date.format("%A").to_string();
-            let day_file = format!("{}/{:02}_{}.md", month_folder, day, weekday);
-            File::create(day_file)?;
+
+            // Only create file if no schedule exists or if this is a class day
+            if class_dates.is_empty() || class_dates.contains(&date) {
+                let weekday = date.format("%A").to_string();
+                let day_file = format!("{}/{:02}_{}.md", month_folder, day, weekday);
+                File::create(day_file)?;
+            }
         }
     }
 
