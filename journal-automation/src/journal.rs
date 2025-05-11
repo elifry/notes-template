@@ -92,9 +92,9 @@ pub fn open_journal_entry_by_date(date_str: &str) -> Result<()> {
     open_in_editor(&journal_path)
 }
 
-pub fn create_year(year: u32) -> Result<()> {
+pub fn create_year(year: u32, class: &str) -> Result<()> {
     let git_root = get_git_root()?;
-    let year_folder = format!("{}/journal/{}", git_root, year);
+    let year_folder = format!("{}/{}/{}", git_root, class, year);
 
     // Create year folder and journey file
     fs::create_dir_all(&year_folder)?;
@@ -137,7 +137,7 @@ pub fn create_year(year: u32) -> Result<()> {
         }
     }
 
-    println!("Created journal structure for year {}", year);
+    println!("Created {} structure for year {}", class, year);
     Ok(())
 }
 

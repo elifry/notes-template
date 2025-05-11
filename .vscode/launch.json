@@ -82,7 +82,7 @@
       "name": "Create Year",
       "type": "PowerShell",
       "request": "launch",
-      "script": "& { $year = Read-Host 'Enter year (YYYY)'; cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- create-year $year }",
+      "script": "& { $year = Read-Host 'Enter year (YYYY)'; $class = Read-Host 'Enter class name (default: journal)'; if ([string]::IsNullOrEmpty($class)) { $class = 'journal' }; cargo run --manifest-path ${workspaceFolder}/journal-automation/Cargo.toml -- create-year $year $class }",
       "cwd": "${workspaceFolder}/journal-automation"
     }
   ]

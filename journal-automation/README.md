@@ -19,7 +19,7 @@ ja open-journal
 ja open-day 2024-03-15
 
 # Create an entire year's worth of journal files
-ja create-year 2025
+ja create-year 2025 [class]  # Optional class name (e.g., CS101), defaults to "journal"
 
 # Find and open a random empty journal entry (optionally filtered by year)
 ja empty-day [year]

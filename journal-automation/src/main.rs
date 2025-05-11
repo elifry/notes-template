@@ -21,8 +21,8 @@ fn main() -> Result<()> {
         Commands::OpenDay { date } => {
             journal::open_journal_entry_by_date(&date)?;
         }
-        Commands::CreateYear { year } => {
-            journal::create_year(year)?;
+        Commands::CreateYear { year, class } => {
+            journal::create_year(year, &class)?;
         }
         Commands::EmptyDay { year } => {
             journal::find_empty_day(year)?;

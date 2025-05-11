@@ -24,6 +24,9 @@ pub enum Commands {
         /// Year to create (2000-2099)
         #[arg(value_parser = validate_year)]
         year: u32,
+        /// Class name (e.g., CS101)
+        #[arg(default_value = "journal")]
+        class: String,
     },
     /// Find and open a random empty journal entry
     EmptyDay {
